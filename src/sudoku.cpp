@@ -1,23 +1,68 @@
 #include "sudoku.h"
 #include <iostream>
+#include <algorithm>
+#include <vector>
+#include <ctime>
 
-Sudoku::Sudoku() {
-    int temp[N][N] = {
-        {5,3,0,0,7,0,0,0,0},
-        {6,0,0,1,9,5,0,0,0},
-        {0,9,8,0,0,0,0,6,0},
-        {8,0,0,0,6,0,0,0,3},
-        {4,0,0,8,0,3,0,0,1},
-        {7,0,0,0,2,0,0,0,6},
-        {0,6,0,0,0,0,2,8,0},
-        {0,0,0,4,1,9,0,0,5},
-        {0,0,0,0,8,0,0,7,9}
-    };
-    for (int r = 0; r < N; ++r)
+Sudoku::Sudoku(int dificultad) {
+    generarTablero(dificultad);
+}
+
+bool Sudoku::resolver(int g[N][N]) {
+    for (int r = 0; r < N; ++r) {
         for (int c = 0; c < N; ++c) {
-            grid[r][c] = temp[r][c];
-            fixed[r][c] = (temp[r][c] != 0);
+            if (g[r][c] == 0) {
+                for (int num = 1; num <= 9; ++num) {
+                    if (esSeguroCelda(g, r, c, num)) {
+                        g[r][c] = num;
+                        if (resolver(g)) return true;
+                        g[r][c] = 0;
+                    }
+                }
+                return false;
+            }
         }
+    }
+    return true;
+}
+
+bool Sudoku::esSeguroCelda(int g[N][N], int r, int c, int num) {
+    for (int x = 0; x < N; ++x)
+        if (g[r][x] == num || g[x][c] == num) return false;
+    int sr = r - r % 3, sc = c - c % 3;
+    for (int i = 0; i < 3; ++i)
+        for (int j = 0; j < 3; ++j)
+            if (g[sr + i][sc + j] == num) return false;
+    return true;
+}
+
+void Sudoku::generarTablero(int dificultad) {
+    // Generar tablero completo
+    int temp[N][N] = {0};
+    std::srand((unsigned)std::time(nullptr));
+    std::vector<int> nums(N);
+    for (int i = 0; i < N; ++i) nums[i] = i + 1;
+    std::random_shuffle(nums.begin(), nums.end());
+    for (int i = 0; i < N; ++i) temp[0][i] = nums[i];
+    resolver(temp);
+    // Copiar tablero resuelto
+    for (int r = 0; r < N; ++r)
+        for (int c = 0; c < N; ++c)
+            grid[r][c] = temp[r][c];
+    // Quitar celdas según dificultad
+    int vacias = dificultad == 1 ? 35 : (dificultad == 2 ? 45 : 55);
+    while (vacias > 0) {
+        int r = std::rand() % N;
+        int c = std::rand() % N;
+        if (grid[r][c] != 0) {
+            grid[r][c] = 0;
+            --vacias;
+        }
+    }
+    // Marcar celdas fijas
+    for (int r = 0; r < N; ++r)
+        for (int c = 0; c < N; ++c)
+            fixed[r][c] = (grid[r][c] != 0);
 }
 
 void Sudoku::imprimir() {
