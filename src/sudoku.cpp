@@ -66,6 +66,11 @@ void Sudoku::generarTablero(int dificultad) {
 }
 
 void Sudoku::imprimir() {
+    int solucion[N][N];
+    for (int r = 0; r < N; ++r)
+        for (int c = 0; c < N; ++c)
+            solucion[r][c] = grid[r][c];
+    resolver(solucion); // Obtener la solución para comparar
     for (int r = 0; r < N; ++r) {
         for (int c = 0; c < N; ++c) {
             int v = grid[r][c];
@@ -75,19 +80,10 @@ void Sudoku::imprimir() {
                 if (fixed[r][c]) {
                     std::cout << v << " ";
                 } else {
-                    bool correcto = true;
-                    for (int i = 0; i < N; ++i)
-                        if ((i != c && grid[r][i] == v) || (i != r && grid[i][c] == v))
-                            correcto = false;
-                    int sr = r - r % 3, sc = c - c % 3;
-                    for (int i = 0; i < 3; ++i)
-                        for (int j = 0; j < 3; ++j)
-                            if ((sr + i != r || sc + j != c) && grid[sr + i][sc + j] == v)
-                                correcto = false;
-                    if (correcto)
-                        std::cout << "\033[32m" << v << "\033[0m ";
+                    if (v == solucion[r][c])
+                        std::cout << "\033[32m" << v << "\033[0m "; // Verde si es correcto
                     else
-                        std::cout << "\033[31m" << v << "\033[0m ";
+                        std::cout << "\033[31m" << v << "\033[0m "; // Rojo si es incorrecto
                 }
             }
         }
@@ -109,7 +105,7 @@ void Sudoku::entradaUsuario() {
     int r, c, v;
     while (true) {
         imprimir();
-        std::cout << "\nFila Columna Valor (0 0 0 para salir): ";
+        std::cout << "\nFila Columna Valor (0 0 0 para salir al menú): ";
         std::cin >> r >> c >> v;
         if (r == 0 && c == 0 && v == 0) break;
         if (r < 1 || r > 9 || c < 1 || c > 9 || v < 1 || v > 9) {
