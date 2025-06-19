@@ -16,6 +16,8 @@ private:
     bool fixed[N][N];
     bool resolver(int g[N][N]);
     void generarTablero(int dificultad);
+    // NUEVO: para resaltar el último número puesto
+    int ultimoR = -1, ultimoC = -1, ultimoV = 0;
 };
 
 #endif // SUDOKU_H

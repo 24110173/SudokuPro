@@ -74,7 +74,13 @@ void Sudoku::imprimir() {
     for (int r = 0; r < N; ++r) {
         for (int c = 0; c < N; ++c) {
             int v = grid[r][c];
-            if (v == 0) {
+            // Resaltar el último número puesto y sus contrapartes
+            if (ultimoV != 0 && v == ultimoV) {
+                if (r == ultimoR && c == ultimoC)
+                    std::cout << "\033[44;97m" << v << "\033[0m "; // Fondo azul, texto blanco para el último
+                else
+                    std::cout << "\033[46;30m" << v << "\033[0m "; // Fondo cyan, texto negro para contrapartes
+            } else if (v == 0) {
                 std::cout << ". ";
             } else {
                 if (fixed[r][c]) {
@@ -117,6 +123,9 @@ void Sudoku::entradaUsuario() {
             continue;
         }
         grid[r - 1][c - 1] = v;
+        ultimoR = r - 1;
+        ultimoC = c - 1;
+        ultimoV = v;
     }
 }
 
