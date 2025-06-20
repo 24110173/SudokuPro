@@ -78,7 +78,7 @@ int main() {
     medioSprite.setPosition(400 - anchoMedio/2, botonesY + espacioY);
     dificilSprite.setPosition(400 - anchoDificil/2, botonesY + 2*espacioY);
     tableroSprite.setScale(0.8f, 0.8f);
-    tableroSprite.setPosition(80, 40);
+    tableroSprite.setPosition(80 - 240 + 96 + 48 - 120, 40 - 90 + 30 + 90 - 90); // Subir 3 cm (90px) más la tabla
     int estado = 0;
     int dificultad = 0;
     std::vector<std::vector<Celda>> tablero;
