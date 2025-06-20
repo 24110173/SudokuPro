@@ -1,11 +1,8 @@
-// sudoku_gui.cpp
-// Interfaz gráfica de Sudoku con SFML
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <string>
 #include <iostream>
 
-// Ajusta los nombres de las imágenes según tu carpeta Imagenes/
 const std::string MENU_IMG = "../Imagenes/WhatsApp Image 2025-06-19 at 10.30.55 PM.jpeg";
 const std::string MODO_FACIL_IMG = "../Imagenes/WhatsApp Image 2025-06-19 at 10.30.56 PM (1).jpeg";
 const std::string MODO_MEDIO_IMG = "../Imagenes/WhatsApp Image 2025-06-19 at 10.30.56 PM (2).jpeg";
@@ -34,12 +31,11 @@ int main() {
     sf::Sprite facilSprite(facilTexture);
     sf::Sprite medioSprite(medioTexture);
     sf::Sprite dificilSprite(dificilTexture);
-    // Centrar sprites
     menuSprite.setPosition(100, 30);
     facilSprite.setPosition(200, 300);
     medioSprite.setPosition(350, 300);
     dificilSprite.setPosition(500, 300);
-    int estado = 0; // 0=menu, 1=facil, 2=medio, 3=dificil, 4=juego
+    int estado = 0;
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
@@ -59,8 +55,6 @@ int main() {
             window.draw(medioSprite);
             window.draw(dificilSprite);
         } else {
-            // Aquí iría la lógica para mostrar el tablero y los números
-            // window.draw(tableroSprite); ...
         }
         window.display();
     }
