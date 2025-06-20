@@ -1,0 +1,86 @@
+@startuml
+!define RECTANGLE class
+skinparam classAttributeIconSize 0
+
+RECTANGLE JuegoSudoku {
+}
+
+RECTANGLE Tablero
+RECTANGLE Celda
+RECTANGLE Numero
+RECTANGLE Jugador
+RECTANGLE EntradaTeclado
+RECTANGLE Comprobador
+RECTANGLE Validacion
+RECTANGLE ReglaFila
+RECTANGLE ReglaColumna
+RECTANGLE ReglaCuadro
+RECTANGLE InterfazGrafica
+RECTANGLE MostrarColores
+RECTANGLE ColorVerde
+RECTANGLE ColorRojo
+RECTANGLE Temporizador
+RECTANGLE Cronometro
+RECTANGLE Dificultad
+RECTANGLE Facil
+RECTANGLE Medio
+RECTANGLE Dificil
+RECTANGLE EstadoJuego
+RECTANGLE Victoria
+RECTANGLE Error
+RECTANGLE Reinicio
+RECTANGLE Pista
+RECTANGLE GeneradorSudoku
+RECTANGLE SolucionadorSudoku
+RECTANGLE ArchivoFuente
+RECTANGLE EntradaUsuario
+
+JuegoSudoku --> Tablero: tiene
+JuegoSudoku --> Jugador: tiene
+JuegoSudoku --> InterfazGrafica: tiene
+JuegoSudoku --> EstadoJuego: tiene
+JuegoSudoku --> Dificultad: tiene
+JuegoSudoku --> GeneradorSudoku: usa
+JuegoSudoku --> Comprobador: usa
+JuegoSudoku --> Temporizador: usa
+
+Tablero --> Celda: tiene
+Tablero --> EntradaUsuario: recibe
+Tablero --> MostrarColores: usa
+
+Celda --> Numero: tiene
+Celda --> ColorVerde: muestra
+Celda --> ColorRojo: muestra
+
+Jugador --> EntradaTeclado: usa
+Jugador --> Pista: solicita
+
+EntradaTeclado --> EntradaUsuario: genera
+
+Comprobador --> Validacion: usa
+Validacion --> ReglaFila: incluye
+Validacion --> ReglaColumna: incluye
+Validacion --> ReglaCuadro: incluye
+
+InterfazGrafica --> MostrarColores: tiene
+
+MostrarColores --> ColorVerde: usa
+MostrarColores --> ColorRojo: usa
+
+Temporizador --> Cronometro: es
+
+Dificultad --> Facil: es
+Dificultad --> Medio: es
+Dificultad --> Dificil: es
+
+EstadoJuego --> Victoria: es
+EstadoJuego --> Error: es
+EstadoJuego --> Reinicio: permite
+
+Pista --> SolucionadorSudoku: usa
+
+GeneradorSudoku --> SolucionadorSudoku: verifica
+
+ArchivoFuente --> JuegoSudoku: define
+
+@enduml
