@@ -65,13 +65,18 @@ int main() {
         numSprites[i].setPosition(60 + i*80, 700);
     }
     menuSprite.setOrigin(menuTexture.getSize().x/2, menuTexture.getSize().y/2);
-    menuSprite.setPosition(400, 200);
-    facilSprite.setScale(0.3f, 0.3f);
-    medioSprite.setScale(0.3f, 0.3f);
-    dificilSprite.setScale(0.3f, 0.3f);
-    facilSprite.setPosition(100, 400);
-    medioSprite.setPosition(300, 400);
-    dificilSprite.setPosition(500, 400);
+    menuSprite.setPosition(400, 480);
+    facilSprite.setScale(0.6f, 0.6f);
+    medioSprite.setScale(0.6f, 0.6f);
+    dificilSprite.setScale(0.6f, 0.6f);
+    float botonesY = 610 - 450 + 90; // 3 cm (aprox 90px) más abajo
+    float espacioY = 180;
+    float anchoFacil = facilSprite.getGlobalBounds().width;
+    float anchoMedio = medioSprite.getGlobalBounds().width;
+    float anchoDificil = dificilSprite.getGlobalBounds().width;
+    facilSprite.setPosition(400 - anchoFacil/2, botonesY);
+    medioSprite.setPosition(400 - anchoMedio/2, botonesY + espacioY);
+    dificilSprite.setPosition(400 - anchoDificil/2, botonesY + 2*espacioY);
     tableroSprite.setScale(0.8f, 0.8f);
     tableroSprite.setPosition(80, 40);
     int estado = 0;
@@ -79,6 +84,13 @@ int main() {
     std::vector<std::vector<Celda>> tablero;
     int seleccionado = -1;
     int selFila = -1, selCol = -1;
+    auto nuevoTablero = [&](int dif) {
+        int vacias = 0;
+        if (dif == 1) vacias = 30; // fácil
+        else if (dif == 2) vacias = 45; // medio
+        else if (dif == 3) vacias = 60; // difícil
+        return generarTablero(vacias);
+    };
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
@@ -87,14 +99,14 @@ int main() {
             if (estado == 0 && event.type == sf::Event::MouseButtonPressed) {
                 auto x = event.mouseButton.x, y = event.mouseButton.y;
                 if (facilSprite.getGlobalBounds().contains(x, y)) {
-                    dificultad = 30; estado = 1;
-                    tablero = generarTablero(dificultad);
+                    dificultad = 1; estado = 1;
+                    tablero = nuevoTablero(dificultad);
                 } else if (medioSprite.getGlobalBounds().contains(x, y)) {
-                    dificultad = 40; estado = 1;
-                    tablero = generarTablero(dificultad);
+                    dificultad = 2; estado = 1;
+                    tablero = nuevoTablero(dificultad);
                 } else if (dificilSprite.getGlobalBounds().contains(x, y)) {
-                    dificultad = 50; estado = 1;
-                    tablero = generarTablero(dificultad);
+                    dificultad = 3; estado = 1;
+                    tablero = nuevoTablero(dificultad);
                 }
             }
             if (estado == 1 && event.type == sf::Event::MouseButtonPressed) {
