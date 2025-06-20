@@ -62,7 +62,7 @@ int main() {
         numTextures[i].loadFromFile(NUM_IMG[i]);
         numSprites[i].setTexture(numTextures[i]);
         numSprites[i].setScale(0.15f, 0.15f);
-        numSprites[i].setPosition(60 + i*80, 700);
+        numSprites[i].setPosition(60 + i*80, 700 - 48); // Subir 2 cm (48px)
     }
     menuSprite.setOrigin(menuTexture.getSize().x/2, menuTexture.getSize().y/2);
     menuSprite.setPosition(400, 480);
@@ -141,7 +141,7 @@ int main() {
                     if (tablero[i][j].valor > 0) {
                         numSprites[tablero[i][j].valor-1].setPosition(80 + j*71, 40 + i*71);
                         window.draw(numSprites[tablero[i][j].valor-1]);
-                        numSprites[tablero[i][j].valor-1].setPosition(60 + (tablero[i][j].valor-1)*80, 700);
+                        numSprites[tablero[i][j].valor-1].setPosition(60 + (tablero[i][j].valor-1)*80, 700 - 48); // Subir 2 cm (48px)
                     }
                     if (i == selFila && j == selCol) {
                         sf::RectangleShape rect(sf::Vector2f(71,71));
