@@ -2,40 +2,83 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <ctime>
+#include <cstdlib>
 
-const std::string MENU_IMG = "../Imagenes/WhatsApp Image 2025-06-19 at 10.30.55 PM.jpeg";
-const std::string MODO_FACIL_IMG = "../Imagenes/WhatsApp Image 2025-06-19 at 10.30.56 PM (1).jpeg";
-const std::string MODO_MEDIO_IMG = "../Imagenes/WhatsApp Image 2025-06-19 at 10.30.56 PM (2).jpeg";
-const std::string MODO_DIFICIL_IMG = "../Imagenes/WhatsApp Image 2025-06-19 at 10.30.56 PM (3).jpeg";
-const std::string TABLERO_IMG = "../Imagenes/WhatsApp Image 2025-06-19 at 10.30.56 PM (4).jpeg";
+const std::string MENU_IMG = "Imagenes/Menu del sudoku.jpeg";
+const std::string MODO_FACIL_IMG = "Imagenes/Modo facil.jpeg";
+const std::string MODO_MEDIO_IMG = "Imagenes/Modo mediano.jpeg";
+const std::string MODO_DIFICIL_IMG = "Imagenes/Modo dificil.jpeg";
+const std::string TABLERO_IMG = "Imagenes/Tabla de Sudoku.jpeg";
 const std::string NUM_IMG[9] = {
-    "../Imagenes/WhatsApp Image 2025-06-19 at 10.30.57 PM.jpeg",
-    "../Imagenes/WhatsApp Image 2025-06-19 at 10.30.57 PM (1).jpeg",
-    "../Imagenes/WhatsApp Image 2025-06-19 at 10.30.57 PM (2).jpeg",
-    "../Imagenes/WhatsApp Image 2025-06-19 at 10.30.57 PM (3).jpeg",
-    "../Imagenes/WhatsApp Image 2025-06-19 at 10.30.57 PM (4).jpeg",
-    "../Imagenes/WhatsApp Image 2025-06-19 at 10.32.30 PM.jpeg",
-    "../Imagenes/WhatsApp Image 2025-06-19 at 10.32.31 PM.jpeg",
-    "../Imagenes/WhatsApp Image 2025-06-19 at 10.32.31 PM (1).jpeg",
-    "../Imagenes/WhatsApp Image 2025-06-19 at 10.30.56 PM.jpeg"
+    "Imagenes/Numero 1.jpeg",
+    "Imagenes/Numero 2.jpeg",
+    "Imagenes/Numero 3.jpeg",
+    "Imagenes/Numero 4.jpeg",
+    "Imagenes/Numero 5.jpeg",
+    "Imagenes/Numero 6.jpeg",
+    "Imagenes/Numero 7.jpeg",
+    "Imagenes/Numero 8.jpeg",
+    "Imagenes/Numero 9.jpeg"
 };
 
+struct Celda {
+    int valor; // 0 = vacía
+    bool fija;
+};
+
+std::vector<std::vector<Celda>> generarTablero(int vacias) {
+    std::vector<std::vector<Celda>> tablero(9, std::vector<Celda>(9, {0, false}));
+    // Generar una solución simple (no única, solo para demo)
+    int n = 1;
+    for (int i = 0; i < 9; ++i)
+        for (int j = 0; j < 9; ++j)
+            tablero[i][j] = {((i*3 + i/3 + j)%9)+1, true};
+    // Quitar celdas
+    srand(time(0));
+    for (int k = 0; k < vacias; ++k) {
+        int i = rand()%9, j = rand()%9;
+        tablero[i][j] = {0, false};
+    }
+    return tablero;
+}
+
 int main() {
-    sf::RenderWindow window(sf::VideoMode(800, 600), "Sudoku Interactivo");
-    sf::Texture menuTexture, facilTexture, medioTexture, dificilTexture;
+    sf::RenderWindow window(sf::VideoMode(800, 800), "Sudoku Interactivo");
+    sf::Texture menuTexture, facilTexture, medioTexture, dificilTexture, tableroTexture;
     menuTexture.loadFromFile(MENU_IMG);
     facilTexture.loadFromFile(MODO_FACIL_IMG);
     medioTexture.loadFromFile(MODO_MEDIO_IMG);
     dificilTexture.loadFromFile(MODO_DIFICIL_IMG);
+    tableroTexture.loadFromFile(TABLERO_IMG);
     sf::Sprite menuSprite(menuTexture);
     sf::Sprite facilSprite(facilTexture);
     sf::Sprite medioSprite(medioTexture);
     sf::Sprite dificilSprite(dificilTexture);
-    menuSprite.setPosition(100, 30);
-    facilSprite.setPosition(200, 300);
-    medioSprite.setPosition(350, 300);
-    dificilSprite.setPosition(500, 300);
+    sf::Sprite tableroSprite(tableroTexture);
+    sf::Texture numTextures[9];
+    sf::Sprite numSprites[9];
+    for (int i = 0; i < 9; ++i) {
+        numTextures[i].loadFromFile(NUM_IMG[i]);
+        numSprites[i].setTexture(numTextures[i]);
+        numSprites[i].setScale(0.15f, 0.15f);
+        numSprites[i].setPosition(60 + i*80, 700);
+    }
+    menuSprite.setOrigin(menuTexture.getSize().x/2, menuTexture.getSize().y/2);
+    menuSprite.setPosition(400, 200);
+    facilSprite.setScale(0.3f, 0.3f);
+    medioSprite.setScale(0.3f, 0.3f);
+    dificilSprite.setScale(0.3f, 0.3f);
+    facilSprite.setPosition(100, 400);
+    medioSprite.setPosition(300, 400);
+    dificilSprite.setPosition(500, 400);
+    tableroSprite.setScale(0.8f, 0.8f);
+    tableroSprite.setPosition(80, 40);
     int estado = 0;
+    int dificultad = 0;
+    std::vector<std::vector<Celda>> tablero;
+    int seleccionado = -1;
+    int selFila = -1, selCol = -1;
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
@@ -43,9 +86,34 @@ int main() {
                 window.close();
             if (estado == 0 && event.type == sf::Event::MouseButtonPressed) {
                 auto x = event.mouseButton.x, y = event.mouseButton.y;
-                if (facilSprite.getGlobalBounds().contains(x, y)) estado = 1;
-                else if (medioSprite.getGlobalBounds().contains(x, y)) estado = 2;
-                else if (dificilSprite.getGlobalBounds().contains(x, y)) estado = 3;
+                if (facilSprite.getGlobalBounds().contains(x, y)) {
+                    dificultad = 30; estado = 1;
+                    tablero = generarTablero(dificultad);
+                } else if (medioSprite.getGlobalBounds().contains(x, y)) {
+                    dificultad = 40; estado = 1;
+                    tablero = generarTablero(dificultad);
+                } else if (dificilSprite.getGlobalBounds().contains(x, y)) {
+                    dificultad = 50; estado = 1;
+                    tablero = generarTablero(dificultad);
+                }
+            }
+            if (estado == 1 && event.type == sf::Event::MouseButtonPressed) {
+                auto x = event.mouseButton.x, y = event.mouseButton.y;
+                if (y > 700 && y < 780) {
+                    for (int i = 0; i < 9; ++i) {
+                        if (numSprites[i].getGlobalBounds().contains(x, y)) seleccionado = i+1;
+                    }
+                } else if (x > 80 && x < 720 && y > 40 && y < 680) {
+                    int col = (x-80)/71;
+                    int fil = (y-40)/71;
+                    if (!tablero[fil][col].fija) {
+                        selFila = fil; selCol = col;
+                        if (seleccionado > 0) {
+                            tablero[fil][col].valor = seleccionado;
+                            seleccionado = -1;
+                        }
+                    }
+                }
             }
         }
         window.clear(sf::Color::White);
@@ -54,7 +122,24 @@ int main() {
             window.draw(facilSprite);
             window.draw(medioSprite);
             window.draw(dificilSprite);
-        } else {
+        } else if (estado == 1) {
+            window.draw(tableroSprite);
+            for (int i = 0; i < 9; ++i) {
+                for (int j = 0; j < 9; ++j) {
+                    if (tablero[i][j].valor > 0) {
+                        numSprites[tablero[i][j].valor-1].setPosition(80 + j*71, 40 + i*71);
+                        window.draw(numSprites[tablero[i][j].valor-1]);
+                        numSprites[tablero[i][j].valor-1].setPosition(60 + (tablero[i][j].valor-1)*80, 700);
+                    }
+                    if (i == selFila && j == selCol) {
+                        sf::RectangleShape rect(sf::Vector2f(71,71));
+                        rect.setPosition(80 + j*71, 40 + i*71);
+                        rect.setFillColor(sf::Color(0,0,255,60));
+                        window.draw(rect);
+                    }
+                }
+            }
+            for (int i = 0; i < 9; ++i) window.draw(numSprites[i]);
         }
         window.display();
     }
