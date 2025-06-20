@@ -16,7 +16,7 @@ private:
     bool fixed[N][N];
     bool resolver(int g[N][N]);
     void generarTablero(int dificultad);
-    // NUEVO: para resaltar el último número puesto
+    bool esSeguroCelda(int g[N][N], int r, int c, int num);
     int ultimoR = -1, ultimoC = -1, ultimoV = 0;
 };
 

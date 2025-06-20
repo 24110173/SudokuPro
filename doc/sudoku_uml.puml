@@ -1,4 +1,4 @@
-@startuml
+@startuml sudoku
 !define RECTANGLE class
 skinparam classAttributeIconSize 0
 
@@ -35,52 +35,52 @@ RECTANGLE SolucionadorSudoku
 RECTANGLE ArchivoFuente
 RECTANGLE EntradaUsuario
 
-JuegoSudoku --> Tablero: tiene
-JuegoSudoku --> Jugador: tiene
-JuegoSudoku --> InterfazGrafica: tiene
-JuegoSudoku --> EstadoJuego: tiene
-JuegoSudoku --> Dificultad: tiene
-JuegoSudoku --> GeneradorSudoku: usa
-JuegoSudoku --> Comprobador: usa
-JuegoSudoku --> Temporizador: usa
+JuegoSudoku --> Tablero : tiene
+JuegoSudoku --> Jugador : tiene
+JuegoSudoku --> InterfazGrafica : tiene
+JuegoSudoku --> EstadoJuego : tiene
+JuegoSudoku --> Dificultad : tiene
+JuegoSudoku --> GeneradorSudoku : usa
+JuegoSudoku --> Comprobador : usa
+JuegoSudoku --> Temporizador : usa
 
-Tablero --> Celda: tiene
-Tablero --> EntradaUsuario: recibe
-Tablero --> MostrarColores: usa
+Tablero --> Celda : tiene
+Tablero --> EntradaUsuario : recibe
+Tablero --> MostrarColores : usa
 
-Celda --> Numero: tiene
-Celda --> ColorVerde: muestra
-Celda --> ColorRojo: muestra
+Celda --> Numero : tiene
+Celda --> ColorVerde : muestra
+Celda --> ColorRojo : muestra
 
-Jugador --> EntradaTeclado: usa
-Jugador --> Pista: solicita
+Jugador --> EntradaTeclado : usa
+Jugador --> Pista : solicita
 
-EntradaTeclado --> EntradaUsuario: genera
+EntradaTeclado --> EntradaUsuario : genera
 
-Comprobador --> Validacion: usa
-Validacion --> ReglaFila: incluye
-Validacion --> ReglaColumna: incluye
-Validacion --> ReglaCuadro: incluye
+Comprobador --> Validacion : usa
+Validacion --> ReglaFila : incluye
+Validacion --> ReglaColumna : incluye
+Validacion --> ReglaCuadro : incluye
 
-InterfazGrafica --> MostrarColores: tiene
+InterfazGrafica --> MostrarColores : tiene
 
-MostrarColores --> ColorVerde: usa
-MostrarColores --> ColorRojo: usa
+MostrarColores --> ColorVerde : usa
+MostrarColores --> ColorRojo : usa
 
-Temporizador --> Cronometro: es
+Temporizador --> Cronometro : es
 
-Dificultad --> Facil: es
-Dificultad --> Medio: es
-Dificultad --> Dificil: es
+Dificultad --> Facil : es
+Dificultad --> Medio : es
+Dificultad --> Dificil : es
 
-EstadoJuego --> Victoria: es
-EstadoJuego --> Error: es
-EstadoJuego --> Reinicio: permite
+EstadoJuego --> Victoria : es
+EstadoJuego --> Error : es
+EstadoJuego --> Reinicio : permite
 
-Pista --> SolucionadorSudoku: usa
+Pista --> SolucionadorSudoku : usa
 
-GeneradorSudoku --> SolucionadorSudoku: verifica
+GeneradorSudoku --> SolucionadorSudoku : verifica
 
-ArchivoFuente --> JuegoSudoku: define
+ArchivoFuente --> JuegoSudoku : define
 
 @enduml
